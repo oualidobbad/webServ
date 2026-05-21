@@ -1,5 +1,10 @@
 #include <iostream>
+#include <string>
 #include <vector>
+#include <fstream>
+#include <exception>
+#include <sstream>
+#include <stack>
 
 using namespace std;
 
@@ -11,11 +16,7 @@ class ParseConfig
 
     public:
         ParseConfig(string configFile);
-        
+        void tokenize();
+        void print();
         ~ParseConfig();
 };
-
-
-ParseConfig::ParseConfig(string configFile){
-    this->_configFile = configFile;
-}
