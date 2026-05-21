@@ -17,6 +17,10 @@ class ParseConfig
     public:
         ParseConfig(string configFile);
         void tokenize();
-        void print();
+        void debug(){
+            for (vector<string>::iterator it = _tokens.begin(); it != _tokens.end(); it++){
+                cout << *it << endl;
+            }
+        }
         ~ParseConfig();
 };
