@@ -1,6 +1,6 @@
 #include <iostream>
-#include <cstdlib> // strtol
-#include <cerrno>    // errno, ERANGE
+#include <cstdlib>
+#include <cerrno>
 #include <string>
 #include <stdexcept>
 

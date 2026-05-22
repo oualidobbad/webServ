@@ -45,18 +45,27 @@ void ParseConfig::tokenize(){
         throw runtime_error("Error: Unclosed brace '{' found");
 }
 
-// void ParseConfig::parseServer(Server& server, vector<string> &tokens, vector<string>::iterator &it){
+void ParseConfig::parseServer(Server& server, size_t &i){
+    if (i >= _tokens.size())
+        throw invalid_argument("block not completed !");
+    else if (_tokens[i++] != "{")
+        throw invalid_argument("config file syntax error must found braces follow server like -> 'server {'");
 
-// }
+    while (i < _tokens.size())
+    {
+        
+    }
+    
+}
 
 void ParseConfig::parse(){
-    vector<string>::iterator it = _tokens.begin();
-    while (it != _tokens.end()){
-        Server Server;
-        if (*it++ == "server"){
-            continue;
+    size_t i = 0;
+    while (i < _tokens.size()){
+        Server server;
+        if (_tokens[i++] == "server"){
+           parseServer(server, i);
         }else{
-            throw invalid_argument("config file must start with [server] not " + *it);
+            throw invalid_argument("config file must start with [server] not " + _tokens[i]);
         }
     }
 }

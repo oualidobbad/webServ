@@ -25,6 +25,17 @@ void Server::setPort(string port){
     this->_port = static_cast<int>(_port);
 }
 
+void Server::setRoot(string root){
+    this->_root = root;
+}
+
+const int& Server::getPort() const{
+    return _port;
+}
+const string& Server::getRoot() const{
+    return _root;
+}
+
     // void validateRoot(const std::string& path) {
     //     // 1. Empty
     //     if (path.empty())
@@ -46,14 +57,3 @@ void Server::setPort(string port){
     //     if (access(path.c_str(), R_OK) != 0)
     //         throw std::runtime_error("root path is not readable: " + path);
     // }
-
-void Server::setRoot(string root){
-    this->_root = root;
-}
-
-const int& Server::getPort() const{
-    return _port;
-}
-const string& Server::getRoot() const{
-    return _root;
-}
