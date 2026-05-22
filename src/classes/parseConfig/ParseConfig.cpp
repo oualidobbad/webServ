@@ -3,16 +3,6 @@
 ParseConfig::ParseConfig(string configFile) : _configFile(configFile) {}
 ParseConfig::~ParseConfig(){}
 
-void checkBraces(stack<string> &bracesCheck, string word)
-{
-    if (word == "{")
-        bracesCheck.push(word);
-    else if (!bracesCheck.empty() && word == "}" && bracesCheck.top() == "{")
-        bracesCheck.pop();
-    else
-        throw runtime_error("Error: Unmatched closing brace '}'");
-}
-
 void ParseConfig::tokenize(){
 
     ifstream file(_configFile.c_str());
@@ -22,8 +12,7 @@ void ParseConfig::tokenize(){
     string line;
     stack<string> bracesCheck;
 
-    while (getline(file, line))
-    {
+    while (getline(file, line)) {
         size_t commentPos = line.find('#');
         if (commentPos != string::npos) {
             line = line.substr(0, commentPos);
@@ -41,7 +30,14 @@ void ParseConfig::tokenize(){
         
         while (iss >> word) {
             if (word == "{" || word == "}")
-                checkBraces(bracesCheck, word);
+            {
+                if (word == "{")
+                    bracesCheck.push(word);
+                else if (!bracesCheck.empty() && word == "}" && bracesCheck.top() == "{")
+                    bracesCheck.pop();
+                else
+                    throw runtime_error("Error: Unmatched closing brace '}'");
+            }
             _tokens.push_back(word);
         }
     }
@@ -49,4 +45,19 @@ void ParseConfig::tokenize(){
         throw runtime_error("Error: Unclosed brace '{' found");
 }
 
+// void ParseConfig::parseServer(Server& server, vector<string> &tokens, vector<string>::iterator &it){
+
+// }
+
+void ParseConfig::parse(){
+    vector<string>::iterator it = _tokens.begin();
+    while (it != _tokens.end()){
+        Server Server;
+        if (*it++ == "server"){
+            continue;
+        }else{
+            throw invalid_argument("config file must start with [server] not " + *it);
+        }
+    }
+}
 

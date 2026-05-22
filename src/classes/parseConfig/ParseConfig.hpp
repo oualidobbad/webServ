@@ -1,22 +1,23 @@
-#include <iostream>
-#include <string>
 #include <vector>
 #include <fstream>
-#include <exception>
 #include <sstream>
 #include <stack>
-
-using namespace std;
+#include <list>
+#include "Server.hpp"
 
 class ParseConfig
 {
     private:
         string _configFile;
         vector<string> _tokens;
+        list<Server> servers;
+
+        void parseServer(Server& server, vector<string> &tokens, vector<string>::iterator &it);
 
     public:
         ParseConfig(string configFile);
         void tokenize();
+        void parse();
         void debug(){
             for (vector<string>::iterator it = _tokens.begin(); it != _tokens.end(); it++){
                 cout << *it << endl;

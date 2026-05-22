@@ -9,7 +9,8 @@ int main (int ac, char *av[])
             fileName = av[1];
         ParseConfig parseConfig = ParseConfig(fileName);
         parseConfig.tokenize();
-        parseConfig.debug();
+        parseConfig.parse();
+        // parseConfig.debug();
         // delete parseConfig;
     }
     catch(const std::exception& e)
