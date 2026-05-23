@@ -1,6 +1,6 @@
 #include "Server.hpp"
 
-Server::Server() : _port(8080), _root("resources/sites/")
+Server::Server() : _port(-1), _root("")
 {
 }
 

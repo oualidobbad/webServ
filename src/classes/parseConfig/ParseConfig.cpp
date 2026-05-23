@@ -20,9 +20,9 @@ void ParseConfig::tokenize(){
         if (line.empty()) continue;
         for (size_t i = 0; i < line.length(); ++i) {
             if (line[i] == '{' || line[i] == '}' || line[i] == ';') {
-                line.insert(i + 1, " "); // Space after
-                line.insert(i, " ");     // Space before
-                i += 2;                  // Skip over the two new spaces
+                line.insert(i + 1, " ");
+                line.insert(i, " ");
+                i += 2;
             }
         }
         istringstream iss(line);
@@ -42,31 +42,54 @@ void ParseConfig::tokenize(){
         }
     }
     if (!bracesCheck.empty())
-        throw runtime_error("Error: Unclosed brace '{' found");
+        throw runtime_error("Error: Unclosed brace '{'");
 }
 
-void ParseConfig::parseServer(Server& server, size_t &i){
+size_t ParseConfig::incrIdx(size_t &i)
+{
     if (i >= _tokens.size())
-        throw invalid_argument("block not completed !");
-    else if (_tokens[i++] != "{")
-        throw invalid_argument("config file syntax error must found braces follow server like -> 'server {'");
+        throw invalid_argument("Block not completed.");
+    return i++;
+}
+void ParseConfig::parseServer(Server& server, size_t &i){
+    
+    if (_tokens[incrIdx(i)] != "{")
+        throw invalid_argument("Config file syntax error: expected '{' after 'server'.");
 
     while (i < _tokens.size())
     {
+        string currentToken = _tokens[incrIdx(i)];
+        if (currentToken == "listen"){
+            server.setPort(_tokens[incrIdx(i)]);
+        }else if (currentToken == "root"){
+            server.setRoot(_tokens[incrIdx(i)]);
+        }
+        else if (currentToken == "}")
+            break;
+        else{
+            throw invalid_argument("Unsupported directive: '" + currentToken + "'.");
+        }
+        if (_tokens[incrIdx(i)] != ";")
+            throw invalid_argument("Syntax error: line must end with ';'.");
         
     }
-    
+    if (server.getPort() == -1  || server.getRoot().empty())
+        throw invalid_argument("Config file must contain directives 'listen' and 'root'.");
 }
 
 void ParseConfig::parse(){
     size_t i = 0;
+    if (_tokens.empty())
+        throw runtime_error("File is empty: must contain [server] block with [listen, root].");
     while (i < _tokens.size()){
         Server server;
-        if (_tokens[i++] == "server"){
+        string currentToken = _tokens[incrIdx(i)];
+        if (currentToken == "server"){
            parseServer(server, i);
         }else{
-            throw invalid_argument("config file must start with [server] not " + _tokens[i]);
+            throw invalid_argument("Config file must start with [server], not " + currentToken + ".");
         }
+        servers.push_back(server);
     }
 }
 
